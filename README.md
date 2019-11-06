@@ -16,7 +16,7 @@ This repo is aimed to simplify training, evaluation and prediction in Pytorch.
 ## Installation
 
 ```bash
-pip install --upgrade git+https://github.com/Z-Zheng/SimpleCV.git
+pip install --upgrade git+https://github.com/Z-Zheng/ever.git
 ```
 
 #### Requirements:
@@ -25,21 +25,21 @@ pip install --upgrade git+https://github.com/Z-Zheng/SimpleCV.git
 - opencv, skimage, sklearn, pillow
 
 
-## Citing SimpleCV
-If you use SimpleCV in your research, please use the following BibTeX entry.
+## Citing EVER
+If you use EVER in your research, please use the following BibTeX entry.
 ```
-@misc{simplecv2018,
-  author =       {Zhuo Zheng},
-  title =        {SimpleCV},
-  howpublished = {\url{https://github.com/Z-Zheng/SimpleCV}},
+@misc{ever2018,
+  author =       {Zhuo Zheng, Junjue Wang, Yanfei Zhong},
+  title =        {EVER: Earth Vision rEpresentation libRary},
+  howpublished = {\url{https://github.com/Z-Zheng/ever}},
   year =         {2018}
 }
 ```
 
 ## Usage
-Please refer to [USAGE.md](https://github.com/Z-Zheng/SimpleCV/blob/master/USAGE.md) for the basic usage of SimpleCV.
+Please refer to [USAGE.md](https://github.com/Z-Zheng/SimpleCV/blob/master/USAGE.md) for the basic usage of EVER.
 
-## Projects using SimpleCV
+## Projects using EVER
 - 2019 IEEE GRSS Data Fusion Contest, Track1: Single-view semantic 3D challenge, 2nd solution code (Pop-Net)
 
 ## Change logs

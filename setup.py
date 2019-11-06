@@ -9,7 +9,7 @@ install_requires = [
     'albumentations==0.4.2'
 ]
 setup(
-    name='simplecv',
+    name='ever',
     version='0.3.4',
     description='Simplify training, evaluation, prediction in Pytorch',
     keywords='computer vision using pytorch 1.0',

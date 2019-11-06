@@ -1,3 +1,0 @@
-"""
-Closed source
-"""
