@@ -10,13 +10,27 @@ import time
 EPS = 1e-7
 
 
-class NPPixelMertic(object):
-    def __init__(self, num_classes, logdir=None):
+class NPPixelMetric(object):
+    def __init__(self, num_classes, logdir=None, logger=None):
         self.num_classes = num_classes
         self._total = sparse.coo_matrix((num_classes, num_classes), dtype=np.float32)
         if logdir is not None:
             os.makedirs(logdir, exist_ok=True)
         self.logdir = logdir
+        if logdir is not None and logger is None:
+            self._logger = get_console_file_logger('PixelMertic', logging.INFO, self.logdir)
+        elif logger is not None:
+            self._logger = logger
+        else:
+            self._logger = None
+
+    @property
+    def logger(self):
+        return self._logger
+
+    def reset(self):
+        num_classes = self.num_classes
+        self._total = sparse.coo_matrix((num_classes, num_classes), dtype=np.float32)
 
     @staticmethod
     def compute_iou_per_class(confusion_matrix):
@@ -76,6 +90,14 @@ class NPPixelMertic(object):
         cm = sparse.coo_matrix((v, (y_true, y_pred)), shape=(self.num_classes, self.num_classes), dtype=np.float32)
         self._total += cm
 
+    def _log_summary(self, table, dense_cm):
+        if self.logger is not None:
+            self.logger.info('\n' + table.get_string())
+            if self.logdir is not None:
+                np.save(os.path.join(self.logdir, 'confusion_matrix-{time}.npy'.format(time=time.time())), dense_cm)
+        else:
+            print(table)
+
     def summary_iou(self):
         dense_cm = self._total.toarray()
         iou_per_class = NPPixelMertic.compute_iou_per_class(dense_cm)
@@ -86,13 +108,10 @@ class NPPixelMertic(object):
         for idx, iou in enumerate(iou_per_class):
             tb.add_row([idx, iou])
         tb.add_row(['mIoU', miou])
-        if self.logdir is not None:
-            logger = get_console_file_logger('mIoU', logging.INFO, self.logdir)
-            logger.info('\n' + tb.get_string())
-            np.save(os.path.join(self.logdir, 'confusion_matrix-{time}.npy'.format(time=time.time())), dense_cm)
-        else:
-            print(tb)
-        return iou_per_class, miou
+
+        self._log_summary(tb, dense_cm)
+
+        return tb
 
     def summary_all(self):
         dense_cm = self._total.toarray()
@@ -116,9 +135,9 @@ class NPPixelMertic(object):
         tb.add_row(['mean', miou, mF1, mprec, mrecall])
         tb.add_row(['OA', overall_accuracy, '-', '-', '-'])
 
-        if self.logdir is not None:
-            logger = get_console_file_logger('PixelMertic', logging.INFO, self.logdir)
-            logger.info('\n' + tb.get_string())
-            np.save(os.path.join(self.logdir, 'confusion_matrix-{time}.npy'.format(time=time.time())), dense_cm)
-        else:
-            print(tb)
+        self._log_summary(tb, dense_cm)
+
+        return tb
+
+
+NPPixelMertic = NPPixelMetric
